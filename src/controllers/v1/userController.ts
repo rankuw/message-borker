@@ -3,6 +3,8 @@ import User,{ userInterface} from "../../models/v1/userModel";
 import {HydratedDocument} from "mongoose"
 import jwt from "jsonwebtoken";
 import md5 from "md5";
+import mqqt, { MqttClient } from "mqtt";
+import { AuthenticateError } from "aedes";
 
 /**
      * 
@@ -50,7 +52,7 @@ export default class UserMethods{
      * @param req The request from user.
      * @param res The response to user.
      */
-    static async login(req: Request, res: Response){
+    static async login(req: Request, res: Response): Promise<void>{
         const {username, password} = req.body;
         try{
             if(!username || !password){
@@ -70,6 +72,19 @@ export default class UserMethods{
         }catch(err: any){
             res.send(err.message);
         }
+    }
+
+    static async client(req: Request, res: Response): Promise<void>{
+        const clientId = req.body.client.username;
+        const client: MqttClient = mqqt.connect("http://localhost:1883", {clientId, username: "xxxxxx"});
+        client.on("connect", () => {
+            console.log(client.options.clientId);
+        })
+
+        client.on("error", (err: AuthenticateError, status: Boolean) => {
+            res.status(403).send(err.message);
+            process.exit();
+        })
     }
 
     
