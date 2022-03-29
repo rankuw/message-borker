@@ -74,6 +74,12 @@ export default class UserMethods{
         }
     }
 
+    /**
+     * 
+     * @param req Request from user
+     * @param res Respone to user
+     * Used to connect a client to the broker.
+     */
     static async client(req: Request, res: Response): Promise<void>{
         const clientId = req.body.client.username;
         const client: MqttClient = mqqt.connect("http://localhost:1883", {clientId, username: "xxxxxx"});
