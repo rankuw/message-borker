@@ -14,6 +14,10 @@ aedess.on("client", (client) => {
     console.log(client.id);
 })
 
+aedess.on("subscribe", (subscription, client) => {
+    console.log(`Client ${client.id} subscribed to ${subscription[0].topic}`);
+})
+
 aedess.authenticate = (client, username, password, callback) => {
     if(client.id === 'ranvijay'){
         return callback(null, true)

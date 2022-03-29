@@ -85,6 +85,13 @@ export default class UserMethods{
         const client: MqttClient = mqqt.connect("http://localhost:1883", {clientId, username: "xxxxxx"});
         client.on("connect", () => {
             console.log(client.options.clientId);
+            client.subscribe("topic", (err) => {
+                if(err){
+                    console.log(err.message);
+                }else{
+                    console.log(client.options.clientId, "subscribed");
+                }
+            })
         })
 
         client.on("error", (err: AuthenticateError, status: Boolean) => {
