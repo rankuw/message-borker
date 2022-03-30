@@ -29,7 +29,7 @@ export default class UserMethods{
      * @param req The request from user.
      * @param res The response to user.
      */
-    static async signUp(req: Request, res: Response): Promise<void>{
+    static async signUp(req: Request, res: Response, next:NextFunction): Promise<void>{
         const {username, password}: userInterface = req.body;
         
         try{
@@ -43,7 +43,7 @@ export default class UserMethods{
             }
             res.status(201).send(`User created with user name: ${user.username}`);
         }catch(err: any){
-            res.send(err.message);
+            next(err);
         }
     }
 
@@ -52,7 +52,7 @@ export default class UserMethods{
      * @param req The request from user.
      * @param res The response to user.
      */
-    static async login(req: Request, res: Response): Promise<void>{
+    static async login(req: Request, res: Response, next:NextFunction): Promise<void>{
         const {username, password} = req.body;
         try{
             if(!username || !password){
@@ -70,7 +70,7 @@ export default class UserMethods{
                 }
             }
         }catch(err: any){
-            res.send(err.message);
+            next(err);
         }
     }
 
@@ -80,7 +80,7 @@ export default class UserMethods{
      * @param res Respone to user
      * Used to connect a client to the broker.
      */
-    static async client(req: Request, res: Response): Promise<void>{
+    static async client(req: Request, res: Response, next: NextFunction): Promise<void>{
         let i = 0;
         console.log(i++);
         const clientId = req.body.client.username;
