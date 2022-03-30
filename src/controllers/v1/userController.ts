@@ -81,8 +81,10 @@ export default class UserMethods{
      * Used to connect a client to the broker.
      */
     static async client(req: Request, res: Response): Promise<void>{
+        let i = 0;
+        console.log(i++);
         const clientId = req.body.client.username;
-        const client: MqttClient = mqqt.connect("http://localhost:1883", {clientId, username: "xxxxxx"});
+        const client: MqttClient = mqqt.connect("http://localhost:1883", {clientId});
         client.on("connect", () => {
             console.log(client.options.clientId);
             client.subscribe("topic", (err) => {
@@ -92,11 +94,30 @@ export default class UserMethods{
                     console.log(client.options.clientId, "subscribed");
                 }
             })
+            client.on("message", (topic, message) => {
+                res.status(200).send(message);
+            })
         })
 
         client.on("error", (err: AuthenticateError, status: Boolean) => {
             res.status(403).send(err.message);
             process.exit();
+        })
+    }
+
+    /**
+     * 
+     * @param req Request from user
+     * @param res Respone to user
+     * Used to publish.
+     */
+    static publish(req: Request, res: Response): void{
+        const clientId = req.body.client.username;
+        const message = req.body.message;
+        const client: MqttClient = mqqt.connect("http://localhost:1883", {clientId});
+        client.on("connect", () => {
+            client.publish("topic", message);
+            res.send("Message sent");
         })
     }
 

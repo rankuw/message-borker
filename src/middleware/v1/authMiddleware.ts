@@ -7,6 +7,7 @@ export default async function auth(req: Request, res: Response, next: NextFuncti
         try{
             const username = jwt.verify(token, process.env.JWT_KEY );
             req.body.client = username;
+            console.log(username);
             next();
         }catch(err){
             res.status(403).send("Login first");
