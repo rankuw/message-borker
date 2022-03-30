@@ -32,17 +32,16 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const config_1 = __importDefault(require("dotenv/config"));
 const db_1 = __importDefault(require("./config/db"));
 const authRoutes_1 = __importDefault(require("./routes/v1/authRoutes"));
+const errorMiddleware_1 = __importDefault(require("./middleware/v1/errorMiddleware"));
 config_1.default;
 (0, db_1.default)();
 const app = (0, express_1.default)();
 const PORT = (_a = process.env.PORT) !== null && _a !== void 0 ? _a : 5000;
-app.get("/", (req, res) => {
-    console.log("sdfsdf");
-});
 //middleware
 app.use((0, cookie_parser_1.default)());
-app.use(express_1.json);
+app.use((0, express_1.json)());
 app.use(authRoutes_1.default);
+app.use(errorMiddleware_1.default);
 app.listen(PORT, () => {
     console.log("Listening on port ", PORT);
 });
